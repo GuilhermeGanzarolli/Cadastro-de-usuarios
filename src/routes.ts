@@ -6,3 +6,4 @@ export const router = Router()
 
 router.get("/users", userController.getUsers)
 router.get("/user/:id", userController.getUserById)
+router.post("/user", userController.createUser)
