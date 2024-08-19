@@ -16,9 +16,9 @@ export const getAllUsers = async ()=>{
 
 //Retornar um usuário específico pelo ID
 export const getUserByIdService = async (id:number)=>{
-    const getQuery = `select * from usuarios where id=${id}`
+    const sqlQuery = `select * from usuarios where id=${id}`
     try{
-        const result = (await client.query(getQuery)).rows
+        const result = (await client.query(sqlQuery)).rows
         if(result.length==0){
             return {message:"Não foi encontrado nenhum usuário com este id"}
         }else{
@@ -31,9 +31,9 @@ export const getUserByIdService = async (id:number)=>{
 
 //Insere um novo usuário no banco de dados
 export const createUserService = async (info:userModel)=>{
-    const insertQuery = `insert into usuarios(nome, email, password) values($1,$2,$3)`
+    const sqlQuery = `insert into usuarios(nome, email, password) values($1,$2,$3)`
     try {
-        const result = await client.query(insertQuery,[info.nome,info.email,info.password])
+        const result = await client.query(sqlQuery,[info.nome,info.email,info.password])
         return {messagem:`Usuário ${info.nome} inserido com sucesso`}
     } catch (error) {
         return {messagem: `Algo deu errado -> ${error}`}
@@ -41,3 +41,35 @@ export const createUserService = async (info:userModel)=>{
 }
 
 //Atualiza as dados de um usuário no banco de dados
+export const updateUserByIdService = async (id:number, info:any) => {
+    let updates = []
+    if (info.nome) {
+        updates.push(`nome = '${info.nome}'`)
+    }
+    if (info.email) {
+        updates.push(`email = '${info.email}'`)
+    }
+
+    const sqlQuery = `update usuarios set ${updates.join(', ')} where id = ${id}`
+
+    try {
+        const result = await client.query(sqlQuery)
+        return {message: "Usuário atualizado com sucesso"}
+    } catch (error) {
+        return {messagem: `Erro ao atualizar usuário -> ${error}`}
+    }
+
+}
+
+//Deletar usuário pelo ID
+export const deleteUserByIdService = async (id:number)=>{
+    
+    const sqlQuery = `delete from usuarios where id = ${id}`
+
+    try {
+        const result = await client.query(sqlQuery)
+        return {message: `Usuário de id = ${id} foi deletado com sucesso`}
+    } catch (error) {
+        return {messagem: `Erro ao deletar usuário -> ${error}`}
+    }
+}

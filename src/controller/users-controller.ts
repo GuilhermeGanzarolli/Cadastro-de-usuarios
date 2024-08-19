@@ -22,3 +22,17 @@ export const createUser = async (request: Request, response:Response)=>{
     const httpResponse = await s.createUserService(informacoes)
     response.json(httpResponse)
 }
+
+export const updataUserById = async (request:Request, response:Response) => {
+    const id = parseInt(request.params.id)
+    const info = request.body
+    const httpResponse = await s.updateUserByIdService(id, info)
+    response.json(httpResponse)
+}
+
+export const delteUserById = async (request:Request, response:Response) => {
+    const id = parseInt(request.params.id)
+    
+    const httpResponse = await s.deleteUserByIdService(id)
+    response.json(httpResponse)
+}
